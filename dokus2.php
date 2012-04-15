@@ -11,7 +11,20 @@ License: Copyright, no use without permission!
 error_reporting(E_ALL ^ E_NOTICE);
 
 require('DokusService.php');
+require('handle.php');
+require('DokusWP.php');
 
+const POST_WORDPRESS_ID = 'wordpress_id';
+const POST_DOKUS_ID = 'dokus_id';
+const WP_OPTION_KEY = "dokus";
+const WP_OPTION_USERS = "wordpress_users";
+const WP_OPTION_GROUPS = "groups";
+const WP_OPTION_SETTINGS = "settings";
+const WP_OPTION_SETTINGS_EMAIL = "email";
+const WP_OPTION_SETTINGS_PASSWORD = "password";
+const WP_OPTION_SETTINGS_SUBDOMAIN = "subdomain";
+
+define('DOKUS_PAGE', "dokus-page");
 define ('SEE_DOKUS_USERS', "SEE_DOKUS_USERS");
 define ('SEE_GROUPS', "SEE_GROUPS");
 define("SEE_WORDPRESS_USERS", "SEE_WORDPRESS_USERS");
@@ -21,6 +34,15 @@ define('SHOW_DOKUS_ADMIN_PAGE', 'options-general.php?page=dokus');
 define('DOKUS_ADMIN_URL', get_admin_url() . '' . SHOW_DOKUS_ADMIN_PAGE);
 
 add_action('admin_menu', 'dokus_menu');
+
+ class DokusConst {
+     private  static $validPages = array('settings', 'default', 'dokusUsers', 'groups', 'options', 'peopleList',
+                            'wordpressUsers');
+
+    public static  function getValidPages() {
+        return self::$validPages;
+    }
+}
 
 function dokus_menu()
 {
@@ -33,70 +55,37 @@ function dokus_options_page()
         wp_die(__('You do not have sufficient permissions to access this page.'));
         wp_enqueue_style('css', WP_PLUGIN_URL . '/' . GCE_PLUGIN_NAME . '/css.css');
     }
-    decideHandler();
-    throw new Exception("No handler defined.");
-    if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        if (isset($_POST['subdomain'])):
-            $email = $_POST["email"];
-            $password = $_POST["password"];
-            $subdomain = $_POST["subdomain"];
-            Dokus2::setDokusAccountSettings($email, $password, $subdomain);
-        else:
-            update_dokus();
-        endif;
-    }
-    header_output();
-    $dokus = new Dokus();
-    if (is_null($dokus->dokus_service)) {
-        $email = '';
-        $password = '';
-        $subdomain = '';
-        output_settings_page($email, $password, $subdomain);
+    $dokus=null;
+    if(dokusAccountNotSet()):
+        include "pages/settings.php";
         exit;
-    }
+    endif;
+
+    $dokus  = getDokusService();
+
+    $requestedPage = $_GET[DOKUS_PAGE];
+    if (validateRequest($requestedPage)):
+       include  "pages/$requestedPage.php";
+    else:
+        include "noHandler.php";
+    endif;
+
 }
 
-function decideHandler() {
-    switch ($_GET[SHOW_PAGE]):
-        case SHOW_PAGE_SETTINGS:
-            $settings = Dokus::getDokusAccountSettings();
-            $email = $settings["email"];
-            $password = $settings["password"];
-            $subdomain = $settings["subdomain"];
-            output_settings_page($email, $password, $subdomain);
-            break;
-        case SEE_OPTIONS:
-            $options = get_option(Dokus::WP_OPTION_KEY);
-            print_array($options);
-            break;
-        case SEE_DOKUS_USERS:
-            $customerResource = new DokusCustomersResource($dokus->dokus_service);
-            $users = $customerResource->all();
-            print_array($users);
-            break;
-        case SEE_WORDPRESS_USERS:
-            $users = get_users();
-            print_array($users);
-            break;
-        case SEE_GROUPS:
-            $groupsResource = new DokusCustomerGroupsResource($dokus->dokus_service);
-            $group_nr = $_GET[GROUP_NR];
-            if (!empty($group_nr)):
-                $groupsResource->get($group_nr);
-            else:
-                $groupsResource->all();
-            endif;
+function getDokusService() {
+    $dokusAccount = getDokusAccountSettings();
+    return new DokusService($dokusAccount->email, $dokusAccount->password, $dokusAccount->subdomain);
+}
 
-            list($groups, $w_groups_not_in_d, $d_groups_not_in_w) = get_list_of_groups($dokus);
-            output_groups($groups, $w_groups_not_in_d, $d_groups_not_in_w);
-            break;
-        case SEE_PEOPLE_LIST:
-            print_array(PeopleListWrapper::get_people_list_lists());
-            break;
-        default:
-            list($users, $w_user_not_in_d, $d_user_not_in_w) = get_list_of_users($dokus);
-            output_users($users, $w_user_not_in_d, $d_user_not_in_w);
-    endswitch;
+
+function validateRequest($requestPage) {
+    return in_array(DokusConst::getValidPages(), $requestPage );
+}
+
+function dokusAccountNotSet() {
+    $options = get_option(WP_OPTION_KEY);
+    $settings = $options[WP_OPTION_SETTINGS];
+    return (empty($settings[WP_OPTION_SETTINGS_SUBDOMAIN]));
 }
 
 function get_list_of_groups($dokus)
@@ -146,8 +135,8 @@ function get_list_of_groups($dokus)
 function get_list_of_users($dokus)
 {
     $users = array();
-    $options = get_option(Dokus::WP_OPTION_KEY);
-    $mapping_users = $options[Dokus::WP_OPTION_USERS];
+    $options = get_option(WP_OPTION_KEY);
+    $mapping_users = $options[WP_OPTION_USERS];
 
     $customerResource = new DokusCustomersResource($dokus->dokus_service);
 
@@ -263,5 +252,14 @@ class PeopleListWrapper
         return $people_list_list[$people_list_nr];
     }
 }
+
+function print_array($aArray)
+{
+    // Print a nicely formatted array representation:
+    echo '<pre>';
+        print_r($aArray);
+    echo '</pre>';
+}
+
 
 ?>
