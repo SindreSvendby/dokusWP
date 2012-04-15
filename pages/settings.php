@@ -2,7 +2,6 @@
 if ($_SERVER['REQUEST_METHOD'] == "POST"):
     setAccountSettings();
     $dokusWP = DokusWPFactory::getDokusWP();
-    if ()
 endif;
 $dokusAccount = getDokusAccountSettings();
 print_array($dokusAccount);

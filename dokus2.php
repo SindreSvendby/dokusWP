@@ -11,7 +11,6 @@ License: Copyright, no use without permission!
 error_reporting(E_ALL ^ E_NOTICE);
 
 require('DokusService.php');
-require('handle.php');
 require('DokusWP.php');
 
 const POST_WORDPRESS_ID = 'wordpress_id';
