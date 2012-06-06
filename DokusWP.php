@@ -1,23 +1,35 @@
 <?php
 
+require('DokusService.php');
+
 class DokusWPFactory
 {
-    private static function getDokusAccountSettings()
+    public  static function getDokusAccountSettings()
     {
         $options = get_option(WP_OPTION_KEY);
         $settings = $options[WP_OPTION_SETTINGS];
-        $dokusAccount = new DokusAccount();
-        $dokusAccount->email = $settings[WP_OPTION_SETTINGS_EMAIL];
-        $dokusAccount->password = $settings[WP_OPTION_SETTINGS_PASSWORD];
-        $dokusAccount->subdomain = $settings[WP_OPTION_SETTINGS_SUBDOMAIN];
+        $email = $settings[WP_OPTION_SETTINGS_EMAIL];
+        $password = $settings[WP_OPTION_SETTINGS_PASSWORD];
+        $subdomain = $settings[WP_OPTION_SETTINGS_SUBDOMAIN];
+        $dokusAccount = new DokusAccount($email, $subdomain, $password);
         return $dokusAccount;
     }
 
     public static function getDokusWP()
     {
-        $dokusAccount = $this->getDokusAccountSettings();
+        $dokusAccount = DokusWPFactory::getDokusAccountSettings();
         $dokusService = new DokusService($dokusAccount->email, $dokusAccount->password, $dokusAccount->subdomain);
         return new DokusWP($dokusService);
+    }
+
+    public static function setAccountSettings() {
+        $dokusAccount = new  DokusAccount($_POST["email"],$_POST["subdomain"],$_POST["password"]);
+        $dokusAccount->save();
+    }
+
+    public static function getDokusService() {
+        $dokusAccount = DokusWPFactory::getDokusAccountSettings();
+        return new DokusService($dokusAccount->email, $dokusAccount->password, $dokusAccount->subdomain);
     }
 }
 
@@ -37,20 +49,14 @@ class DokusWP
  */
 class DokusAccount
 {
-    public $email;
+    public  $email;
     public $password;
     public $subdomain;
 
-
-    /**
-     * @return void
-     */
-    public static function setAccountSettings() {
-        $dokusAccount = new  DokusAccount();
-        $dokusAccount->subdomain = $_POST["subdomain"];
-        $dokusAccount->email = $_POST["email"];
-        $dokusAccount->password = $_POST["password"];
-        $dokusAccount->save();
+    public function __construct($email, $subdomain, $password) {
+        $this->email = $email;
+        $this->subdomain = $subdomain;
+        $this->password = $password;
     }
 
     function validDokusAccount() {
@@ -59,7 +65,7 @@ class DokusAccount
         return ($request->status === 200);
     }
 
-    private function save() {
+    public function save() {
         $options = get_option(WP_OPTION_KEY);
         $settings = $options[WP_OPTION_SETTINGS];
         $settings[WP_OPTION_SETTINGS_EMAIL] = $this->email;
@@ -67,5 +73,17 @@ class DokusAccount
         $settings[WP_OPTION_SETTINGS_SUBDOMAIN] = $this->subdomain;
         $options[WP_OPTION_SETTINGS] = $settings;
         update_option(WP_OPTION_KEY, $options);
+    }
+
+    public function __get($property) {
+      if (property_exists($this, $property)) {
+        return $this->$property;
+      }
+    }
+
+    public function __set($property, $value) {
+      if (property_exists($this, $property)) {
+        $this->$property = $value;
+      }
     }
 }

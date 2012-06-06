@@ -1,10 +1,9 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST"):
-    setAccountSettings();
+    DokusWPFactory::setAccountSettings();
     $dokusWP = DokusWPFactory::getDokusWP();
 endif;
-$dokusAccount = getDokusAccountSettings();
-print_array($dokusAccount);
+$dokusAccount = DokusWPFactory::getDokusAccountSettings();
 $pageName = basename($_SERVER[PHP_SELF]);
 ?>
 

@@ -16,19 +16,19 @@ function output_groups($mapped_groups, $w_group_not_in_d, $d_group_not_in_w)
     echo '<div class="group_menu">';
     if (!empty($mapped_groups)):
         echo '<form method="GET" action="' . DOKUS_ADMIN_URL . '">';
-        echo '<select name="'. GROUP_NR .'">';
+        echo '<select name="' . GROUP_NR . '">';
         foreach ($mapped_groups as $wordpress_group_id => $mapped_group):
             echo '<option value="' . $wordpress_group_id . '">' . $mapped_group->wordpress_group["title"] . '</option>';
         endforeach;
         echo '</select>';
-        echo '<input type="hidden" name="'. DOKUS_PAGE.'" value="'  .SEE_GROUPS. '" >';
+        echo '<input type="hidden" name="' . DOKUS_PAGE . '" value="' . SEE_GROUPS . '" >';
         echo '<input type="hidden" name="page" value="dokus" >';
         echo '<input type="submit" value="Show group">';
         echo '</form>';
     endif;
     echo '</div>';
 
-    echo "<h2>Groups mapped</h2>"; 
+    echo "<h2>Groups mapped</h2>";
     echo '<table>';
     if (empty($mapped_groups)) {
         print '<tr><td>No groups are mapped </td><tr>';
@@ -39,11 +39,11 @@ function output_groups($mapped_groups, $w_group_not_in_d, $d_group_not_in_w)
             echo '<input type="hidden" name="' . Dokus::POST_WORDPRESS_ID . '"value="' . $mapped_group->wordpress_group["list_id"] . '">';
             echo '<input type="hidden" name="type" value="' . REMOVE_MAPPING_GROUP . '">';
             print '<td>' . $mapped_group . '</td>';
-            echo '<td><input type="submit" value="'. REMOVE_MAPPING_GROUP .'"></td></form>';
+            echo '<td><input type="submit" value="' . REMOVE_MAPPING_GROUP . '"></td></form>';
             echo '</tr>';
         endforeach;
     }
-    echo '</table>'; 
+    echo '</table>';
     list_output_groups_people_list($w_group_not_in_d, "Wordpress groups not in dokus", "title", ADD_IN_DOKUS_GROUP, "list_id");
     list_output_groups($d_group_not_in_w, "Dokus groups not in wordpress", "name", ONLY_DOKUS_GROUP, "id");
 }
@@ -77,12 +77,13 @@ function output_users($mapped_users, $w_user_not_in_d, $d_user_not_in_w)
 function list_output_groups_people_list($groups, $title, $print_call, $type, $id)
 {
     echo "<h2> " . $title . " </h2>";
+    if (!empty($groups)) {
     if ($type == ONLY_DOKUS_GROUP) {
         echo "<p>Fyll inn ID'en til wordpress gruppen du vil koble til</p>";
     }
     echo '<table>';
 
-    if (!empty($groups))
+
         echo '<tr>';
     echo '<td>id</td>';
     echo '<td>Navn</td>';
@@ -104,6 +105,7 @@ function list_output_groups_people_list($groups, $title, $print_call, $type, $id
         echo '</tr>';
     endforeach;
     echo '</table>';
+    }
 }
 
 
@@ -120,7 +122,7 @@ function list_output_groups($groups, $title, $print_call, $type, $id)
     echo '<td>id</td>';
     echo '<td>Navn</td>';
     echo '<td></td>';
-    echo '</tr>'; 
+    echo '</tr>';
 
     foreach ($groups as $group):
         echo '<tr>';
@@ -154,21 +156,23 @@ function list_output($users, $title, $print_call, $type, $id)
     echo '<td></td>';
     echo '</tr>';
 
-    foreach ($users as $user):
-        echo '<tr>';
-        echo '';
-        echo '<td>' . $user->$id . '</td>';
-        echo '<form action="' . get_admin_url() . 'options-general.php?page=dokus" method="POST">';
-        echo '<input type="hidden" name="' . Dokus::POST_WORDPRESS_ID . '"value="' . $user->$id . '">';
-        echo '<input type="hidden" name="type" value="' . $type . '">';
-        print '<td>' . $user->$print_call . '</td>';
-        if ($type == ONLY_DOKUS) {
-            echo '<td><input type="text" name="' . Dokus::POST_DOKUS_ID . '" value="" /></td>';
-        }
-        echo '<td><input type="submit" value="' . $type . '"></td></form>';
-        echo '</tr>';
-    endforeach;
-    echo '</table>';
+    if ($users != null) {
+        foreach ($users as $user):
+            echo '<tr>';
+            echo '';
+            echo '<td>' . $user->$id . '</td>';
+            echo '<form action="' . get_admin_url() . 'options-general.php?page=dokus" method="POST">';
+            echo '<input type="hidden" name="' . Dokus::POST_WORDPRESS_ID . '"value="' . $user->$id . '">';
+            echo '<input type="hidden" name="type" value="' . $type . '">';
+            print '<td>' . $user->$print_call . '</td>';
+            if ($type == ONLY_DOKUS) {
+                echo '<td><input type="text" name="' . Dokus::POST_DOKUS_ID . '" value="" /></td>';
+            }
+            echo '<td><input type="submit" value="' . $type . '"></td></form>';
+            echo '</tr>';
+        endforeach;
+        echo '</table>';
+    }
 }
 
 function update_dokus()

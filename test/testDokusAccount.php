@@ -8,9 +8,20 @@ require_once('../DokusWP.php');
 
 class TestDokusAccount extends PHPUnit_Framework_TestCase {
 
+    public $dokusAccount;
 
-    public function testDokusAccount() {
-        $dokusAccount = new DokusAccount();
-        $this->assertNotEmpty($dokusAccount);
+    public function setUp() {
+        $email = "sindre.svendby@eniro.no";
+        $subdomain = "holstadtest";
+        $password = "123";
+        $this->dokusAccount = new DokusAccount($email, $subdomain, $password);
+        $this->assertEquals($email,$this->dokusAccount->email);
+        $this->assertEquals($subdomain, $this->dokusAccount->subdomain);
+        $this->assertEquals($password, $this->dokusAccount->password);
     }
+
+    public function testValidDokusAccount() {
+       $this->assertTrue($this->dokusAccount->validDokusAccount());
+   }
+
 }

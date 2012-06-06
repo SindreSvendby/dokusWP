@@ -10,7 +10,6 @@ License: Copyright, no use without permission!
 */
 error_reporting(E_ALL ^ E_NOTICE);
 
-require('DokusService.php');
 require('DokusWP.php');
 
 const POST_WORDPRESS_ID = 'wordpress_id';
@@ -34,11 +33,14 @@ define('DOKUS_ADMIN_URL', get_admin_url() . '' . SHOW_DOKUS_ADMIN_PAGE);
 
 add_action('admin_menu', 'dokus_menu');
 
- class DokusConst {
-     private  static $validPages = array('settings', 'default', 'dokusUsers', 'groups', 'options', 'peopleList',
-                            'wordpressUsers');
 
-    public static  function getValidPages() {
+class DokusConst
+{
+    private static $validPages = array('settings', 'default', 'dokusUsers', 'groups', 'options', 'peopleList',
+        'wordpressUsers');
+
+    public static function getValidPages()
+    {
         return self::$validPages;
     }
 }
@@ -48,40 +50,44 @@ function dokus_menu()
     add_options_page('My Dokus Options', 'Dokus', 'manage_options', 'dokus', 'dokus_options_page');
 }
 
+
+
 function dokus_options_page()
 {
     if (!current_user_can('manage_options')) {
         wp_die(__('You do not have sufficient permissions to access this page.'));
-        wp_enqueue_style('css', WP_PLUGIN_URL . '/' . GCE_PLUGIN_NAME . '/css.css');
+        //wp_enqueue_style('css', WP_PLUGIN_URL . '/' . GCE_PLUGIN_NAME . '/dokus.css');
     }
-    $dokus=null;
-    if(dokusAccountNotSet()):
+    //wp_enqueue_style('dokus_css_style',  '/pages/templates/dokus.css', false, '1.0', 'all');
+
+    //add_action('wp_enqueue_scripts','dokus_css_style');
+
+    $dokus = null;
+    if (dokusAccountNotSet()):
         include "pages/settings.php";
         exit;
     endif;
 
-    $dokus  = getDokusService();
-
+    $dokus = DokusWPFactory::getDokusService();
     $requestedPage = $_GET[DOKUS_PAGE];
-    if (validateRequest($requestedPage)):
-       include  "pages/$requestedPage.php";
+
+    if ($requestedPage == null) {
+        include "pages/default.php";
+    } else if (validateRequest($requestedPage)):
+        include  "pages/$requestedPage.php";
     else:
         include "noHandler.php";
     endif;
-
-}
-
-function getDokusService() {
-    $dokusAccount = getDokusAccountSettings();
-    return new DokusService($dokusAccount->email, $dokusAccount->password, $dokusAccount->subdomain);
 }
 
 
-function validateRequest($requestPage) {
-    return in_array(DokusConst::getValidPages(), $requestPage );
+function validateRequest($requestPage)
+{
+    return in_array(DokusConst::getValidPages(), $requestPage);
 }
 
-function dokusAccountNotSet() {
+function dokusAccountNotSet()
+{
     $options = get_option(WP_OPTION_KEY);
     $settings = $options[WP_OPTION_SETTINGS];
     return (empty($settings[WP_OPTION_SETTINGS_SUBDOMAIN]));
@@ -139,37 +145,40 @@ function get_list_of_users($dokus)
 
     $customerResource = new DokusCustomersResource($dokus->dokus_service);
 
-    foreach ($mapping_users as $wordpress_user_id => $dokus_user_id):
-        $dokus_user = $customerResource->get($dokus_user_id);
-        $wordpress_user = get_userdata($wordpress_user_id);
-        $users[$wordpress_user_id] = new MappingUser($dokus_user, $wordpress_user);
-    endforeach;
+    if ($mapping_users != null) {
+        foreach ($mapping_users as $wordpress_user_id => $dokus_user_id):
+            $dokus_user = $customerResource->get($dokus_user_id);
+            $wordpress_user = get_userdata($wordpress_user_id);
+            $users[$wordpress_user_id] = new MappingUser($dokus_user, $wordpress_user);
+        endforeach;
 
-    $w_user_not_in_d = array();
-    foreach (get_users() as $wordpress_user):
-        if (array_key_exists($wordpress_user->ID, $mapping_users)
-        ):
-            //Its in the mapping table
-        else:
-            $w_user_not_in_d[$wordpress_user->ID] = $wordpress_user;
-        endif;
-    endforeach;
+        $w_user_not_in_d = array();
+        foreach (get_users() as $wordpress_user):
+            if (array_key_exists($wordpress_user->ID, $mapping_users)
+            ):
+                //Its in the mapping table
+                null;
+            else:
+                $w_user_not_in_d[$wordpress_user->ID] = $wordpress_user;
+            endif;
+        endforeach;
 
-    $reverted_mapping = array();
-    foreach ($mapping_users as $wordpress_user_id => $dokus_user_id):
-        $reverted_mapping[$dokus_user_id] = $wordpress_user_id;
-    endforeach;
+        $reverted_mapping = array();
+        foreach ($mapping_users as $wordpress_user_id => $dokus_user_id):
+            $reverted_mapping[$dokus_user_id] = $wordpress_user_id;
+        endforeach;
 
-    $d_user_not_in_w = array();
-    foreach ($customerResource->all() as $dokus_user):
-        if (array_key_exists($dokus_user->id, $reverted_mapping)
-        ) :
-            //Its in the mapping table
-        else:
-            $d_user_not_in_w[$dokus_user->id] = $dokus_user;
-        endif;
+        $d_user_not_in_w = array();
+        foreach ($customerResource->all() as $dokus_user):
+            if (array_key_exists($dokus_user->id, $reverted_mapping)
+            ) :
+                //Its in the mapping table
+            else:
+                $d_user_not_in_w[$dokus_user->id] = $dokus_user;
+            endif;
 
-    endforeach;
+        endforeach;
+    }
     return array($users, $w_user_not_in_d, $d_user_not_in_w);
 }
 
@@ -256,7 +265,7 @@ function print_array($aArray)
 {
     // Print a nicely formatted array representation:
     echo '<pre>';
-        print_r($aArray);
+    print_r($aArray);
     echo '</pre>';
 }
 

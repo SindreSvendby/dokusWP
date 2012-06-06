@@ -1,0 +1,23 @@
+ul {
+    list-style-type: none;
+    height: 80px;
+    width: 663px;
+    margin: auto;
+}
+
+li {
+    float: left;
+}
+
+ul a {
+    background-repeat: no-repeat;
+    background-position: right;
+    padding-right: 32px;
+    padding-left: 32px;
+    display: block;
+    line-height: 80px;
+    text-decoration: none;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 21px;
+    color: #371C1C;
+}
