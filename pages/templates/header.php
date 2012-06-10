@@ -9,7 +9,7 @@
                 <a href="<?= DOKUS_ADMIN_URL ?>">Show users</a>
             </li>
             <li>
-                <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . SHOW_PAGE_SETTINGS ?>">Settings </a>
+                <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . SEE_SETTINGS ?>">Settings </a>
             </li>
             <li>
                 <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . SEE_DOKUS_USERS ?>">Dokus users </a>

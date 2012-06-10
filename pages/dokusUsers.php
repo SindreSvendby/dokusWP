@@ -6,5 +6,5 @@
  
 $customerResource = new DokusCustomersResource($dokus);
 $users = $customerResource->all();
-
+print_array($users);
 ?>

@@ -1,6 +1,5 @@
 <?php
 
-define('SHOW_PAGE_SETTINGS', 'settings');
 define('ADD_IN_DOKUS', 'Add as dokus user');
 define('REMOVE_MAPPING', 'Remove Mapping');
 define('ONLY_DOKUS', "Connect dokus user with wordpress user");

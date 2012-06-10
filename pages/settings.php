@@ -1,13 +1,20 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST"):
-    DokusWPFactory::setAccountSettings();
-    $dokusWP = DokusWPFactory::getDokusWP();
+    setAccountSettings();
+    $dokusWP = getDokusWP();
+    echo $dokusWP;
+    if ($dokusWP->getDokusAccount->validDokusAccount()):
+        $message = "Settings Updated, valid settings :)";
+    else:
+        $message = "Settings Updated, but the settings was not correct. Was not able to login at dokus.no";
+    endif;
 endif;
-$dokusAccount = DokusWPFactory::getDokusAccountSettings();
-$pageName = basename($_SERVER[PHP_SELF]);
+$dokusAccount = getDokusAccountSettings();
+$pageName = "settings";
 ?>
 
 <h1>Dokus Account Settings</h1>
+<?= $message; ?>
 <form name="settings" action="<?= DOKUS_ADMIN_URL . "&" . DOKUS_PAGE . "=" . $pageName ?>" method="POST">
     <br/> Email: <input name='email' value="<?= $dokusAccount->email?>" />
     <br/> Password: <input name='password' type='password' value="<?=$dokusAccount->password ?>" />
