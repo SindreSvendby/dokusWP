@@ -50,9 +50,9 @@ function dokus_options_page()
 {
     if (!current_user_can('manage_options')) {
         wp_die(__('You do not have sufficient permissions to access this page.'));
-        //wp_enqueue_style('css', WP_PLUGIN_URL . '/' . GCE_PLUGIN_NAME . '/dokus.css');
-    }
 
+    }
+    wp_enqueue_style('css', WP_PLUGIN_URL . '/dokusWP/pages/templates/dokus.css');
     include 'pages/templates/header.php';
     $dokus = null;
     if (dokusAccountNotSet()):

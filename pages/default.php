@@ -7,6 +7,10 @@
 $not_mapped_users = get_dokus_users_not_in_wp();
 $dwp_users = get_dokusWpUsers();
 
+echo "<h2>WordPress Plugin for Dokus.no </h2>";
+if(empty($message)) {
+    $message = "<p>Her kan du koble sammen en dokus kunde og en wordpress bruker, lage en kunde i dokus basert på en bruker, eller fjerne koblingen mellom de</p>";
+}
 echo "<h3>" . $message . "</h3>";
 echo "<table>";
 echo "<thead>";
@@ -49,7 +53,7 @@ foreach ($dwp_users as $dwp_user):
         echo "<td></td><td></td>";
         echo "<td><form action='" . $_SERVER['PHP_SELF'] . "?page=dokus&dokus-page=create_dokus_user' method='POST'>";
         echo "<input type='hidden' name='w_id' value='" . $dwp_user->get_w_id() . "' />";
-        echo "<input type='submit' value='Create new dokus user based on " . $dwp_user->get_w_name() . "'/></form></td>";
+        echo "<input type='submit' value='Create user in dokus'/></form></td>";
         echo "</tr>";
     endif;
 endforeach;

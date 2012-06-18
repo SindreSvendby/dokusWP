@@ -12,12 +12,12 @@ li {
 ul a {
     background-repeat: no-repeat;
     background-position: right;
-    padding-right: 32px;
-    padding-left: 32px;
+    padding-right: 15px;
+    padding-left: 15px;
     display: block;
-    line-height: 80px;
+    line-height: 30px;
     text-decoration: none;
     font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 21px;
+    font-size: 15px;
     color: #371C1C;
 }
