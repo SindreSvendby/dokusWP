@@ -12,7 +12,7 @@ $success = add_user_meta( $w_id, WORDPRESS_DOKUS_USER_FIELD, $d_id, true);
 
 if($success) {
     $message = "Mapped User Successfully";
-    header($_SERVER['PHP_SELF'] . "?page=dokus&message=" . $message );
+    include 'default.php';
 } else {
     echo  "Mapping of user failed";
     exit;
