@@ -9,8 +9,8 @@ class RequestHandler
         if (null !== static::$validPages):
             return static::$validPages;
         endif;
-        static::$validPages = array('settings', 'default', 'dokusUsers', 'groups', 'options',
-            'peopleList', SEE_WORDPRESS_USERS, SEE_OPTIONS, SEE_OPTIONS_VALUES);
+        $request_dir = dirname(__FILE__) . "/../pages";
+        static::$validPages = scandir($request_dir);
         return self::$validPages;
     }
 

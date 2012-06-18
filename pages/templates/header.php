@@ -18,7 +18,7 @@
                 <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . SEE_WORDPRESS_USERS ?>">Wordpress users </a>
             </li>
             <li>
-                <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . SEE_OPTIONS ?>">See saved options </a>
+                <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=options' ?>">See saved options </a>
             </li>
             <li>
                 <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . SEE_PEOPLE_LIST ?>">See people list </a>

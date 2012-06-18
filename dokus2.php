@@ -15,6 +15,7 @@ require_once('classes/RequestHandler.php');
 require_once('classes/functions.php');
 require_once('classes/DokusWPUser.php');
 require_once('classes/DokusAccount.php');
+require_once('classes/DokusCustomersCache.php');
 
 const POST_WORDPRESS_ID = 'wordpress_id';
 const POST_DOKUS_ID = 'dokus_id';
@@ -63,42 +64,19 @@ function dokus_options_page()
     $requestedPage = $_GET[DOKUS_PAGE];
 
     if ($requestedPage == null) {
-
         include "pages/default.php";
-    } else if (RequestHandler::validateRequest($requestedPage)):
+    } else if (RequestHandler::validateRequest($requestedPage . ".php")):
         include  "pages/$requestedPage.php";
     else:
         include "pages/noHandler.php";
     endif;
 }
 
-
-
 function dokusAccountNotSet()
 {
     $options = get_option(WP_OPTION_KEY);
     $settings = $options[WP_OPTION_SETTINGS];
     return (empty($settings[WP_OPTION_SETTINGS_SUBDOMAIN]));
-}
-
-
-
-class User
-{
-    public $dokus_user;
-    public $wordpress_user;
-
-    function __construct($d_user, $w_user)
-    {
-        $this->dokus_user = $d_user;
-        $this->wordpress_user = $w_user;
-    }
-
-    function __toString()
-    {
-        return "Wordpress user " . $this->wordpress_user->display_name . " is dokus user with name " . $this->dokus_user->name;
-    }
-
 }
 
 function print_array($aArray)

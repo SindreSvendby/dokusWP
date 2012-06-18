@@ -1,9 +1,8 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == "POST"):
     setAccountSettings();
-    $dokusWP = getDokusWP();
-    echo $dokusWP;
-    if ($dokusWP->getDokusAccount->validDokusAccount()):
+    $dokusAccount = getDokusAccountSettings();
+    if ($dokusAccount->validDokusAccount()):
         $message = "Settings Updated, valid settings :)";
     else:
         $message = "Settings Updated, but the settings was not correct. Was not able to login at dokus.no";
