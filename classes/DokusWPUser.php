@@ -6,7 +6,7 @@ class DokusWPUser
     private $w_id;
     private $d_name;
     private $d_id;
-    private $d_groups;
+    private $groups;
 
     public function set_w_name($name) {
         $this->w_name = $name;
@@ -22,10 +22,6 @@ class DokusWPUser
 
     public function set_d_id($id) {
         $this->d_id = $id;
-    }
-
-    public function set_d_groups($groups) {
-        $this->d_groups = $groups;
     }
 
     public function get_w_name() {
@@ -44,7 +40,18 @@ class DokusWPUser
         return $this->d_id;
     }
 
-    public function get_d_groups() {
-        return $this->d_groups;
+    /**
+     * @return mixed|Groups
+     */
+    public function get_groups()
+    {
+        return $this->groups;
     }
+
+    public function set_groups($groups)
+    {
+        $this->groups = $groups;
+    }
+
+
 }

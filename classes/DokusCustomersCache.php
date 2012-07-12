@@ -19,14 +19,15 @@ class DokusCustomersCache
 
     private static function getDokusCustomers()
     {
-        if(self::$offline == true):
+        if (self::$offline == true):
             self::$customers = file("../resources/customer.json");
         else:
 
-        $dokusCustomersResource = new DokusCustomersResource(getDokusService());
-        foreach ($dokusCustomersResource->all() as $dokus_user):
-            self::$customers[$dokus_user->id] = $dokus_user;
-        endforeach;
+            $dokusCustomersResource = new DokusCustomersResource(getDokusService());
+            $dokus_users  = $dokusCustomersResource->all();
+            foreach ($dokus_users  as $dokus_user):
+                self::$customers[$dokus_user->id] = $dokus_user;
+            endforeach;
         endif;
     }
 }

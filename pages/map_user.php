@@ -15,6 +15,5 @@ if($success) {
     include 'default.php';
 } else {
     echo  "Mapping of user failed";
-    exit;
 }
 

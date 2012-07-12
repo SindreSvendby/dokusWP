@@ -3,25 +3,43 @@
 define("WORDPRESS_DOKUS_USER_FIELD", "dokus_id");
 define("WORDPRESS_DOKUS_GROUP_FIELD", "dokus_group_ids");
 
+/**
+ * @return array
+ */
 function get_dokusWpUsers()
 {
     $users = get_users();
     $dokusWpUsers = array();
     foreach ($users as $user):
         $dokus_user_id = get_user_meta($user->ID, WORDPRESS_DOKUS_USER_FIELD, true);
-        $dokus_groups = get_user_meta($user->ID, WORDPRESS_DOKUS_GROUP_FIELD);
         $dokusWpUser = new DokusWPUser();
-        $dokusWpUser->set_d_id($dokus_user_id);
-        $dokusWpUser->set_d_groups($dokus_groups);
+        $w_groups = get_user_meta($user->ID, WORDPRESS_DOKUS_GROUP_FIELD);
+        if (!empty($dokus_user_id)):
+            $dokusUser = get_dokus_user($dokus_user_id);
+            $dokusWpUser->set_d_name($dokusUser->name);
+            $d_groups = get_all_dokus_groups($dokus_user_id);
+            $groups = compare_groups($w_groups, $d_groups);
+        endif;
+        $dokusWpUser->set_groups($groups);
         $dokusWpUser->set_w_name($user->user_nicename);
         $dokusWpUser->set_w_id($user->ID);
-        $dokusUser = get_dokus_user($dokus_user_id);
-        $dokusWpUser->set_d_name($dokusUser->name);
+        $dokusWpUser->set_d_id($dokus_user_id);
         $dokusWpUsers[$user->ID] = $dokusWpUser;
     endforeach;
     return $dokusWpUsers;
 }
 
+/**
+ * Compares the groups ids in dokus and in wordpress.
+ *
+ * @param $w_groups array of ids registered dokus groups in wordpress
+ * @param $d_groups array containing the ids the user have in dokus
+ * @return Groups
+ */
+function compare_groups($w_groups, $d_groups)
+{
+    return new Groups($d_groups, $w_groups);
+}
 
 function get_dokus_users_not_in_wp()
 {
@@ -36,6 +54,28 @@ function get_dokus_users_not_in_wp()
     return $dokus_users_not_in_wp;
 }
 
+/**
+ * Returns the groups ids of the user id
+ * @param $dokus_user_id
+ * @return array
+ */
+function get_all_dokus_groups($dokus_user_id)
+{
+    $dokus_groups = get_dokus_group(null);
+    $ids_of_groups_containing_dokus_user_id = array();
+    foreach ($dokus_groups as $dokus_group):
+        foreach ($dokus_group->members as $dokus_members):
+            if (strval($dokus_members->id) == $dokus_user_id):
+                $ids_of_groups_containing_dokus_user_id[] = $dokus_group->id;
+            endif;
+        endforeach;
+    endforeach;
+    return $ids_of_groups_containing_dokus_user_id;
+}
+
+/**
+ * @return array
+ */
 function get_dokus_ids_in_wordpress()
 {
     $users = get_users();
@@ -58,4 +98,9 @@ function get_dokus_ids_in_wordpress()
 function get_dokus_user($id)
 {
     return DokusCustomersCache::getCustomer($id);
+}
+
+function get_dokus_group($id)
+{
+    return DokusCustomerGroupCache::getGroup($id);
 }

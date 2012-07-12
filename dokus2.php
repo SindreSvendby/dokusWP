@@ -10,12 +10,12 @@ License: Copyright, no use without permission!
 */
 error_reporting(E_ALL ^ E_NOTICE);
 
-require_once('classes/DokusService.php');
-require_once('classes/RequestHandler.php');
-require_once('classes/functions.php');
-require_once('classes/DokusWPUser.php');
-require_once('classes/DokusAccount.php');
-require_once('classes/DokusCustomersCache.php');
+$dir = dirname(__FILE__);
+$files_in_dir = (glob($dir . "/classes/*.php"));
+foreach ($files_in_dir as $filename) {
+    require($filename);
+}
+//require_once(DokusCustomerGroupCache
 
 const POST_WORDPRESS_ID = 'wordpress_id';
 const POST_DOKUS_ID = 'dokus_id';
@@ -57,18 +57,19 @@ function dokus_options_page()
     $dokus = null;
     if (dokusAccountNotSet()):
         include "pages/settings.php";
-        exit;
-    endif;
-
-    $dokus = getDokusService();
-    $requestedPage = $_GET[DOKUS_PAGE];
-
-    if ($requestedPage == null) {
-        include "pages/default.php";
-    } else if (RequestHandler::validateRequest($requestedPage . ".php")):
-        include  "pages/$requestedPage.php";
     else:
-        include "pages/noHandler.php";
+
+        $dokus = getDokusService();
+        $dokus->setDebug(true);
+        $requestedPage = $_GET[DOKUS_PAGE];
+
+        if ($requestedPage == null) {
+            include "pages/default.php";
+        } else if (RequestHandler::validateRequest($requestedPage . ".php")):
+            include  "pages/$requestedPage.php";
+        else:
+            include "pages/noHandler.php";
+        endif;
     endif;
 }
 
@@ -86,6 +87,4 @@ function print_array($aArray)
     print_r($aArray);
     echo '</pre>';
 }
-
-
 ?>

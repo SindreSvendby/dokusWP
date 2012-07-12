@@ -12,6 +12,5 @@ if($success) {
     include 'default.php';
 } else {
     echo  "Removal of mapping failed";
-    exit;
 }
 

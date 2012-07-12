@@ -23,6 +23,7 @@ class DokusService {
 
     private $debug = false;
 
+
 // API access details
     private $email;
     private $password;
@@ -119,7 +120,9 @@ class DokusService {
             echo $response;
         }
 
-        list($headers, $body) = explode("\r\n\r\n", $response, 2);
+        $responds_array = explode("\r\n\r\n", $response);
+        $headers = $responds_array[0];
+        $body = $responds_array[count($responds_array) - 1];
 
 // Find response status
         preg_match('/^HTTP\/1\.[01] (\d+)/', $headers, $match);
