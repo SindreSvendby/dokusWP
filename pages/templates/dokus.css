@@ -1,15 +1,15 @@
-ul {
+ul.dokus_wp_menu  {
     list-style-type: none;
     height: 80px;
     width: 663px;
     margin: auto;
 }
 
-li {
+li.dokus_wp_menu  {
     float: left;
 }
 
-ul a {
+ul.dokus_wp_menu  a {
     background-repeat: no-repeat;
     background-position: right;
     padding-right: 15px;

@@ -4,7 +4,7 @@
  * License under common sense and respect.
  */
  
-$customerResource = new DokusCustomersResource($dokus);
-$users = $customerResource->all();
+
+$users = $dokus->customers->all();
 print_array($users);
 ?>

@@ -21,9 +21,6 @@ echo "</thead>";
 foreach ($dwp_users as $dwp_user):
 
     $dokus_id = $dwp_user->get_d_id();
-    if ($dwp_user->get_w_id() != '4'):
-        continue;
-    endif;
     echo "<tr>";
     echo "<td>" . $dwp_user->get_w_name() . "</td>";
 
@@ -38,7 +35,7 @@ foreach ($dwp_users as $dwp_user):
         endforeach;
         echo "</td>";
         echo "<td>";
-        foreach ($dwp_user->get_groups()->get_only_dokus() as $group):
+        foreach (array_merge($dwp_user->get_groups()->get_only_dokus(), $dwp_user->get_groups()->get_both()) as $group):
             echo "<form action='" . $_SERVER['PHP_SELF'] . "?page=dokus&dokus-page=remove_group_mapping' method='POST'>";
             echo "<input type='hidden' name='d_id' value='" . $dokus_id . "'>";
             echo "<input type='hidden' name='group_id' value='" . $group . "'>";

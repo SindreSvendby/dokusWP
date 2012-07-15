@@ -4,7 +4,6 @@
  * License under common sense and respect.
  */
 
-$customerGroups = new DokusCustomerGroupsResource($dokus);
-$groups = $customerGroups->all();
+$groups = $dokus->customerGroups->all();
 print_array($groups);
 ?>
