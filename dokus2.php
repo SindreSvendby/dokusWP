@@ -15,7 +15,6 @@ $files_in_dir = (glob($dir . "/classes/*.php"));
 foreach ($files_in_dir as $filename) {
     require($filename);
 }
-require_once('Cache/Lite.php');
 
 
 define('WP_OPTION_KEY', "dokus");
