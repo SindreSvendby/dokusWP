@@ -59,10 +59,10 @@ function dokus_options_page()
         $dokus = getDokusService();
         $dokus->setDebug(true);
         $requestedPage = $_GET[DOKUS_PAGE];
-
+        $requestedHandler = new RequestHandler();
         if ($requestedPage == null) {
             include "pages/default.php";
-        } else if (RequestHandler::validateRequest($requestedPage . ".php")):
+        } else if ($requestedHandler->validateRequest($requestedPage . ".php")):
             include  "pages/$requestedPage.php";
         else:
             include "pages/noHandler.php";
