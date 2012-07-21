@@ -1,0 +1,1 @@
+tar -czvf dokusWP.tar.zip  dokus2.php classes/ pages/

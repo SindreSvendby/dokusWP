@@ -97,10 +97,12 @@ function get_dokus_ids_in_wordpress()
  */
 function get_dokus_user($id)
 {
-    return DokusCustomersCache::getCustomer($id);
+    $customerCache = new DokusCustomersCache();
+    return $customerCache->getCustomer($id);
 }
 
 function get_dokus_group($id)
 {
-    return DokusCustomerGroupCache::getGroup($id);
+    $groupCache = new DokusCustomerGroupCache();
+    return $groupCache->getGroup($id);
 }

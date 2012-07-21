@@ -15,17 +15,15 @@ $files_in_dir = (glob($dir . "/classes/*.php"));
 foreach ($files_in_dir as $filename) {
     require($filename);
 }
-//require_once(DokusCustomerGroupCache
+require_once('Cache/Lite.php');
 
-const POST_WORDPRESS_ID = 'wordpress_id';
-const POST_DOKUS_ID = 'dokus_id';
-const WP_OPTION_KEY = "dokus";
-const WP_OPTION_USERS = "wordpress_users";
-const WP_OPTION_GROUPS = "groups";
-const WP_OPTION_SETTINGS = "settings";
-const WP_OPTION_SETTINGS_EMAIL = "email";
-const WP_OPTION_SETTINGS_PASSWORD = "password";
-const WP_OPTION_SETTINGS_SUBDOMAIN = "subdomain";
+
+define('WP_OPTION_KEY', "dokus");
+define('WP_OPTION_SETTINGS', "settings");
+
+define('WP_OPTION_SETTINGS_EMAIL', "email");
+define('WP_OPTION_SETTINGS_PASSWORD', "password");
+define('WP_OPTION_SETTINGS_SUBDOMAIN', "subdomain");
 
 define('DOKUS_PAGE', "dokus-page");
 define ('SEE_DOKUS_USERS', "dokusUsers");

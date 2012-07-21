@@ -2,31 +2,31 @@
 
 class DokusCustomersCache
 {
-    private static $offline = false;
-    private static $customers;
+    private $offline = false;
+    private $customers;
 
-    public static function getCustomer($id)
+    public function getCustomer($id)
     {
-        if (empty(self::$customers)):
-            self::getDokusCustomers();
+        if (empty($this->customers)):
+            $this->getDokusCustomers();
         endif;
 
         if (empty($id)):
-            return self::$customers;
+            return $this->customers;
         endif;
-        return self::$customers[$id];
+        return $this->customers[$id];
     }
 
-    private static function getDokusCustomers()
+    private function getDokusCustomers()
     {
-        if (self::$offline == true):
-            self::$customers = file("../resources/customer.json");
+        if ($this->offline == true):
+            $this->customers = file("../resources/customer.json");
         else:
 
             $dokusCustomersResource = new DokusCustomersResource(getDokusService());
             $dokus_users  = $dokusCustomersResource->all();
             foreach ($dokus_users  as $dokus_user):
-                self::$customers[$dokus_user->id] = $dokus_user;
+                $this->customers[$dokus_user->id] = $dokus_user;
             endforeach;
         endif;
     }

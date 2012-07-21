@@ -2,20 +2,20 @@
 
 class RequestHandler
 {
-    private static $validPages = null;
+    private $validPages = null;
 
     private function getValidPages()
     {
-        if (null !== static::$validPages):
-            return static::$validPages;
+        if (null !=  $this->validPages):
+            return $this->$validPages;
         endif;
         $request_dir = dirname(__FILE__) . "/../pages";
-        static::$validPages = scandir($request_dir);
-        return self::$validPages;
+        $this->validPages = scandir($request_dir);
+        return $this->validPages;
     }
 
-    public static function validateRequest($requestPage)
+    public function validateRequest($requestPage)
     {
-        return in_array($requestPage, RequestHandler::getValidPages());
+        return in_array($requestPage, $this->getValidPages());
     }
 }

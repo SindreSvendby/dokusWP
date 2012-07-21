@@ -2,30 +2,31 @@
 
 class DokusCustomerGroupCache
 {
-    private static $offline = false;
-    private static $group;
+    private $offline = false;
+    private $group;
 
-    public static function getGroup($id)
+    public function getGroup($id)
     {
-        if (empty(self::$group)):
-            self::getDokusCustomerGroups();
+        if (empty($this->group)):
+            $this->getDokusCustomerGroups();
         endif;
 
+        //return all if no $id is spec.
         if (empty($id)):
-            return self::$group;
+            return $this->group;
         endif;
-        return self::$group[$id];
+
+        return $this->group[$id];
     }
 
-    private static function getDokusCustomerGroups()
+    private function getDokusCustomerGroups()
     {
-        if(self::$offline == true):
-            self::$group = file("../resources/customer_group.json");
+        if($this->offline == true):
+            $this->group = file("../resources/customer_group.json");
         else:
-
-            $dokusCustomersGroupResource = new DokusCustomerGroupsResource(getDokusService());
-            foreach ($dokusCustomersGroupResource->all() as $group):
-                self::$group[$group->id] = $group;
+            $dokus = getDokusService();
+            foreach ($dokus->customerGroups->all() as $group):
+                $this->group[$group->id] = $group;
             endforeach;
         endif;
     }
