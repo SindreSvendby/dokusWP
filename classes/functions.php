@@ -19,8 +19,8 @@ function get_dokusWpUsers()
             $dokusWpUser->set_d_name($dokusUser->name);
             $d_groups = get_all_dokus_groups($dokus_user_id);
             $groups = compare_groups($w_groups, $d_groups);
-        endif;
         $dokusWpUser->set_groups($groups);
+        endif;
         $dokusWpUser->set_w_name($user->user_nicename);
         $dokusWpUser->set_w_id($user->ID);
         $dokusWpUser->set_d_id($dokus_user_id);

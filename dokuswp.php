@@ -3,12 +3,12 @@
 Plugin Name: Dokus
 Plugin URI:
 Description: Accounting system to send invoices to some of the users of your site. No need for two databases
-Version: 0.3 beta
+Version: 0.4 beta
 Author: Sindre Svendby
 Author URI:
 License: Copyright, no use without permission!
 */
-error_reporting(E_ALL ^ E_STRICT);
+#error_reporting(E_ALL ^ E_STRICT);
 
 $dir = dirname(__FILE__);
 $files_in_dir = (glob($dir . "/classes/*.php"));

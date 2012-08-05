@@ -22,7 +22,7 @@ foreach ($dwp_users as $dwp_user):
 
     $dokus_id = $dwp_user->get_d_id();
     echo "<tr>";
-    echo "<td>" . $dwp_user->get_w_name() . "</td>";
+     echo "<td>" . $dwp_user->get_w_name() . "</td>";
 
     if (!empty($dokus_id)):
         echo "<td>" . $dwp_user->get_d_name() . "</td>";

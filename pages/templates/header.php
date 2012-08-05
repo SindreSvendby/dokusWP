@@ -15,6 +15,8 @@
         <li class="dokus_wp_menu">
             <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . SEE_WORDPRESS_USERS ?>">Wordpress users </a>
         </li>
-
+        <li class="dokus_wp_menu">
+            <a href="<?= DOKUS_ADMIN_URL . '&' . DOKUS_PAGE . '=' . "mapping_users" ?>">Mapping users</a>
+        </li>
     </ul>
 </div>
