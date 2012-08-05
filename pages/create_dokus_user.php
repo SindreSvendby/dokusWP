@@ -19,11 +19,12 @@ $success = add_user_meta($w_id, WORDPRESS_DOKUS_USER_FIELD, $newCustomer->id, tr
 
 $d_groups_ids = get_user_meta($w_id, WORDPRESS_DOKUS_GROUP_FIELD, true);
 
-if (!empty($d_groups)):
+if (!empty($d_groups_ids)):
     foreach (explode(",", $d_groups_ids) as $d_group_id):
         $dokus_group = $dokus->customerGroups->get($d_group_id);
-        $members = $dokus_group['members'];
+        $members = $dokus_group->members;
         $members[] = $newCustomer;
+        $dokus_group->members = $members;
         $dokus->customerGroups->save($dokus_group);
     endforeach;
 endif;
