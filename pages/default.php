@@ -4,19 +4,22 @@
  * License under common sense and respect.
  */
 
-$not_mapped_users = get_dokus_users_not_in_wp();
-$dwp_users = get_dokusWpUsers();
+$not_mapped_users = get_dokus_users_not_in_wp($cache);
+$dwp_users = get_dokusWpUsers($cache);
 
 echo "<h2>WordPress Plugin for Dokus.no </h2>";
 if (empty($message)) {
     $message = "<p>Her kan du koble sammen en dokus kunde og en wordpress bruker, lage en kunde i dokus basert på en bruker, eller fjerne koblingen mellom de</p>";
 }
 echo "<h3>" . $message . "</h3>";
+echo "<form action='" . $_SERVER['PHP_SELF'] . "?page=dokus&dokus-page=create_dokus_user' method='POST'>";
+echo "<input type='hidden' name='w_id' value='ALL' />";
+echo "<input type='submit' value='Create user in dokus for all users not in dokus'/></form><br/>";
+
 echo "<table>";
 echo "<thead>";
 echo "<td>Wordpress User</td><td>Dokus User</td><td>Wordpress Groups</td><td>Dokus Groups</td><td>Remove</td><td>Create</td>";
 echo "</thead>";
-
 
 foreach ($dwp_users as $dwp_user):
 

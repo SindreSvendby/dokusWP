@@ -6,7 +6,7 @@ define("WORDPRESS_DOKUS_GROUP_FIELD", "dokus_group_ids");
 /**
  * @return array
  */
-function get_dokusWpUsers()
+function get_dokusWpUsers($cache)
 {
     $users = get_users();
     $dokusWpUsers = array();
@@ -15,9 +15,9 @@ function get_dokusWpUsers()
         $dokusWpUser = new DokusWPUser();
         $w_groups = get_user_meta($user->ID, WORDPRESS_DOKUS_GROUP_FIELD);
         if (!empty($dokus_user_id)):
-            $dokusUser = get_dokus_user($dokus_user_id);
+            $dokusUser = get_dokus_user($dokus_user_id, $cache);
             $dokusWpUser->set_d_name($dokusUser->name);
-            $d_groups = get_all_dokus_groups($dokus_user_id);
+            $d_groups = get_all_dokus_groups($dokus_user_id, $cache);
             $groups = compare_groups($w_groups, $d_groups);
         $dokusWpUser->set_groups($groups);
         endif;
@@ -41,9 +41,9 @@ function compare_groups($w_groups, $d_groups)
     return new Groups($d_groups, $w_groups);
 }
 
-function get_dokus_users_not_in_wp()
+function get_dokus_users_not_in_wp($cache)
 {
-    $dokus_users = get_dokus_user(null);
+    $dokus_users = get_dokus_user(null, $cache);
     $dokus_ids = get_dokus_ids_in_wordpress();
     $dokus_users_not_in_wp = array();
     foreach ($dokus_users as $dokus_user):
@@ -59,9 +59,9 @@ function get_dokus_users_not_in_wp()
  * @param $dokus_user_id
  * @return array
  */
-function get_all_dokus_groups($dokus_user_id)
+function get_all_dokus_groups($dokus_user_id, $cache)
 {
-    $dokus_groups = get_dokus_group(null);
+    $dokus_groups = get_dokus_group(null, $cache);
     $ids_of_groups_containing_dokus_user_id = array();
     foreach ($dokus_groups as $dokus_group):
         foreach ($dokus_group->members as $dokus_members):
@@ -95,14 +95,40 @@ function get_dokus_ids_in_wordpress()
  * @return a Dokus User, or a list of Dokus Users if $id is empty.
  *
  */
-function get_dokus_user($id)
+function get_dokus_user($id, $cache)
 {
-    $customerCache = new DokusCustomersCache();
-    return $customerCache->getCustomer($id);
+    return $cache['customer']->getCustomer($id);
 }
 
-function get_dokus_group($id)
+function get_dokus_group($id, $cache)
 {
-    $groupCache = new DokusCustomerGroupCache();
-    return $groupCache->getGroup($id);
+    return $cache['group']->getGroup($id);
 }
+
+function create_dokus_user($wordpress_id, $dokus)
+{
+
+    $wordpress_user = get_userdata($wordpress_id);
+    $newCustomer = array(
+        'name' => $wordpress_user->data->user_nicename,
+        'email' => $wordpress_user->data->user_email,
+        'country' => 1);
+
+    $newCustomer = $dokus->customers->save($newCustomer);
+
+    $success = add_user_meta($wordpress_id, WORDPRESS_DOKUS_USER_FIELD, $newCustomer->id, true);
+
+    $d_groups_ids = get_user_meta($wordpress_id, WORDPRESS_DOKUS_GROUP_FIELD, true);
+
+    if (!empty($d_groups_ids)):
+        foreach (explode(",", $d_groups_ids) as $d_group_id):
+            $dokus_group = $dokus->customerGroups->get($d_group_id);
+            $members = $dokus_group->members;
+            $members[] = $newCustomer;
+            $dokus_group->members = $members;
+            $dokus->customerGroups->save($dokus_group);
+        endforeach;
+    endif;
+    return $success;
+}
+

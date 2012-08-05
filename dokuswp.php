@@ -55,7 +55,11 @@ function dokus_options_page()
     if (dokusAccountNotSet()):
         include "pages/settings.php";
     else:
-
+        $customerCache = new DokusCustomersCache();
+        $groupCache = new DokusCustomerGroupCache();
+        $cache = array();
+        $cache['group'] = $groupCache;
+        $cache['customer'] = $customerCache;
         $dokus = getDokusService();
         //$dokus->setDebug(true);
         $requestedPage = (isset ($_GET[DOKUS_PAGE])) ? $_GET[DOKUS_PAGE] : false;
