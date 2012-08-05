@@ -3,7 +3,7 @@
 Plugin Name: Dokus
 Plugin URI:
 Description: Accounting system to send invoices to some of the users of your site. No need for two databases
-Version: 0.4 beta
+Version: 0.5 beta
 Author: Sindre Svendby
 Author URI:
 License: Copyright, no use without permission!
