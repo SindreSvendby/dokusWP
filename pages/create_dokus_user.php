@@ -1,8 +1,5 @@
 <?php
 
-// already defined:
-// define("WORDPRESS_DOKUS_USER_FIELD", "dokus_id");
-// define("WORDPRESS_DOKUS_GROUP_FIELD", "dokus_group_ids");
 
 $w_id = $_POST['w_id'];
 

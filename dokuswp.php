@@ -2,8 +2,8 @@
 /*
 Plugin Name: Dokus
 Plugin URI:
-Description: Accounting system to send invoices to some of the users of your site. No need for two databases
-Version: 0.5 beta
+Description: Wordpress pluging for Dokus.no, lets you easily create and groups based on your wordpress user.
+Version: 1.0
 Author: Sindre Svendby
 Author URI:
 License: Copyright, no use without permission!
@@ -83,9 +83,8 @@ function dokusAccountNotSet()
 
 function print_array($aArray)
 {
-    // Print a nicely formatted array representation:
     echo '<pre>';
-    print_r($aArray);
+        print_r($aArray);
     echo '</pre>';
 }
 ?>

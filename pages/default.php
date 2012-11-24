@@ -1,8 +1,4 @@
 <?php
-/**
- * Created by Sindre Svendby
- * License under common sense and respect.
- */
 
 $not_mapped_users = get_dokus_users_not_in_wp($cache);
 $dwp_users = get_dokusWpUsers($cache);

@@ -109,7 +109,7 @@ class DokusService {
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
             CURLOPT_USERPWD => "{$this->email}:{$this->password}",
             CURLOPT_HTTPHEADER => $headers,
-            //Something wrong with the Certificates...
+            //Something wrong with the my certificates...
             CURLOPT_SSL_VERIFYHOST => 0,
             CURLOPT_SSL_VERIFYPEER => 0
         ));
